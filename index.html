@@ -118,7 +118,7 @@ function normalizeOutcomes(d, q){
  let raw = Array.isArray(d?.outcomes) ? d.outcomes : [];
  raw = raw.map((o,i)=>({
    title: String(o?.title ?? o?.name ?? "").trim(),
-   likelihood: String(o?.likelihood ?? o?.probability ?? o?.estimate ?? "").trim(),
+   likelihood: String(o?.likelihood ?? (o?.probability != null ? `${o.probability}%` : "") ?? o?.estimate ?? "").trim(),
    explanation: String(o?.explanation ?? o?.reason ?? o?.description ?? "").trim()
  })).filter(o=>o.title || o.explanation);
 
