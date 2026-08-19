@@ -118,28 +118,48 @@ function normalizeOutcomes(d, q){
  let raw = Array.isArray(d?.outcomes) ? d.outcomes : [];
  raw = raw.map((o,i)=>({
    title: String(o?.title ?? o?.name ?? "").trim(),
-   likelihood: String(o?.likelihood ?? (o?.probability != null ? `${o.probability}%` : "") ?? o?.estimate ?? "").trim(),
+   probability: Number(o?.probability ?? o?.likelihood ?? o?.estimate),
    explanation: String(o?.explanation ?? o?.reason ?? o?.description ?? "").trim()
  })).filter(o=>o.title || o.explanation);
 
+ // Looking Glass always returns at least three distinct paths.
  if(raw.length < 3){
    const used = new Set(raw.map(o=>o.title.toLowerCase()));
    for(const f of fallback){
      if(raw.length >= 3) break;
      if(!used.has(String(f[0]).toLowerCase())){
-       raw.push({title:f[0], likelihood:`${f[1]}% (scenario estimate)`, explanation:f[2]});
+       raw.push({title:f[0], probability:Number(f[1]), explanation:f[2]});
        used.add(String(f[0]).toLowerCase());
      }
    }
  }
  while(raw.length < 3){
-   raw.push({
-     title:`Additional plausible path ${raw.length+1}`,
-     likelihood:"Not quantified",
-     explanation:"This path remains possible because the available information does not justify a precise probability."
-   });
+   const f=fallback[raw.length % Math.max(fallback.length,1)] || [`Path ${raw.length+1}`,1,"A plausible alternative path."];
+   raw.push({title:String(f[0]), probability:Number(f[1])||1, explanation:String(f[2])});
  }
- return raw.slice(0,6);
+ raw=raw.slice(0,6);
+
+ // Every path gets a numeric probability. Missing/invalid values receive a small
+ // baseline weight, then all paths are normalized so the displayed total is 100%.
+ raw.forEach((o,i)=>{
+   if(!Number.isFinite(o.probability) || o.probability <= 0){
+     const f=fallback[i % Math.max(fallback.length,1)];
+     o.probability = Number(f?.[1]) || 1;
+   }
+ });
+ const total=raw.reduce((sum,o)=>sum+o.probability,0) || raw.length;
+ let remaining=100;
+ raw.forEach((o,i)=>{
+   if(i===raw.length-1){
+     o.probability=remaining;
+   }else{
+     const normalized=Math.max(1,Math.round((o.probability/total)*100));
+     o.probability=Math.min(normalized,remaining-(raw.length-i-1));
+     remaining-=o.probability;
+   }
+   o.likelihood=`${o.probability}%`;
+ });
+ return raw;
 }
 
 function render(q,data,source){
@@ -164,7 +184,7 @@ function render(q,data,source){
    <div class="tile"><h3>Assumptions</h3><ul>${assumptions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
  </div>
  <h3 style="margin:22px 0 6px">Possible paths</h3>
- <div class="small" style="margin-bottom:8px">These are modeled scenarios, not guarantees. A percentage is shown only when the engine has an estimate; otherwise it explicitly says “Not quantified.”</div>
+ <div class="small" style="margin-bottom:8px">These are modeled scenario probabilities, not guarantees. Looking Glass always assigns a percentage to every path, and the displayed paths total 100%.</div>
  ${outcomes.map((o,i)=>{
    const n=numeric[i]||0;
    const width=n>0?Math.min(100,(n/max)*100):18;
