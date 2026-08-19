@@ -113,31 +113,78 @@ function localEngine(q){
  return {topic,confidence,facts,assumptions,outcomes,uncertainties,changes,answer:mode==="debate"?"A useful debate answer compares the strongest case on both sides, then identifies which assumptions actually move the conclusion.":"The question is best answered as a set of plausible paths rather than a claim that the future is known."};
 }
 
+function normalizeOutcomes(d, q){
+ const fallback = localEngine(q).outcomes || [];
+ let raw = Array.isArray(d?.outcomes) ? d.outcomes : [];
+ raw = raw.map((o,i)=>({
+   title: String(o?.title ?? o?.name ?? "").trim(),
+   likelihood: String(o?.likelihood ?? o?.probability ?? o?.estimate ?? "").trim(),
+   explanation: String(o?.explanation ?? o?.reason ?? o?.description ?? "").trim()
+ })).filter(o=>o.title || o.explanation);
+
+ if(raw.length < 3){
+   const used = new Set(raw.map(o=>o.title.toLowerCase()));
+   for(const f of fallback){
+     if(raw.length >= 3) break;
+     if(!used.has(String(f[0]).toLowerCase())){
+       raw.push({title:f[0], likelihood:`${f[1]}% (scenario estimate)`, explanation:f[2]});
+       used.add(String(f[0]).toLowerCase());
+     }
+   }
+ }
+ while(raw.length < 3){
+   raw.push({
+     title:`Additional plausible path ${raw.length+1}`,
+     likelihood:"Not quantified",
+     explanation:"This path remains possible because the available information does not justify a precise probability."
+   });
+ }
+ return raw.slice(0,6);
+}
+
 function render(q,data,source){
- const d=data||localEngine(q), outcomes=d.outcomes||[], max=Math.max(...outcomes.map(o=>Number(String(o.likelihood).replace(/[^0-9]/g,""))||1),1);
+ const d=data||localEngine(q);
+ const outcomes=normalizeOutcomes(d,q);
+ const facts=Array.isArray(d.facts)&&d.facts.length?d.facts:localEngine(q).facts;
+ const assumptions=Array.isArray(d.assumptions)&&d.assumptions.length?d.assumptions:localEngine(q).assumptions;
+ const uncertainties=Array.isArray(d.uncertainties)&&d.uncertainties.length?d.uncertainties:localEngine(q).uncertainties;
+ const changes=Array.isArray(d.whatWouldChangeIt)&&d.whatWouldChangeIt.length?d.whatWouldChangeIt:
+   (Array.isArray(d.changes)&&d.changes.length?d.changes:localEngine(q).changes);
+ const bottomLine=String(d.bottomLine||d.answer||"The question is best answered by comparing the strongest plausible paths and the assumptions that separate them.");
+ const numeric=outcomes.map(o=>parseFloat(String(o.likelihood).replace(/,/g,"").match(/\d+(?:\.\d+)?/)?.[0]||"0"));
+ const max=Math.max(...numeric,1);
+
  $("result").innerHTML=`
  <div class="kicker">${esc(source)}</div>
  <h2>${esc(q)}</h2>
  <div class="meta"><span class="pill">Topic: ${esc(d.topic||"general")}</span><span class="pill">Confidence: ${esc(d.confidence||"uncertain")}</span><span class="pill">Horizon: ${esc($("horizon").value)}</span></div>
- <div class="note"><strong>Bottom line</strong><br><span class="answer">${esc(d.bottomLine||d.answer||"The model did not provide a bottom line.")}</span></div>
+ <div class="note"><strong>Bottom line</strong><br><span class="answer">${esc(bottomLine)}</span></div>
  <div class="grid">
-   <div class="tile"><h3>Established / given</h3><ul>${(d.facts||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
-   <div class="tile"><h3>Assumptions</h3><ul>${(d.assumptions||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+   <div class="tile"><h3>Established / given</h3><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+   <div class="tile"><h3>Assumptions</h3><ul>${assumptions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
  </div>
  <h3 style="margin:22px 0 6px">Possible paths</h3>
- ${outcomes.map(o=>{const n=Number(String(o.likelihood).replace(/[^0-9]/g,""))||0;return `<div class="outcome"><div class="outcomeTop"><h3>${esc(o.title)}</h3><span class="likelihood">${esc(o.likelihood)}</span></div><div class="bar"><i style="width:${Math.min(100,n/max)}%"></i></div><div class="small">${esc(o.explanation)}</div></div>`}).join("")}
+ <div class="small" style="margin-bottom:8px">These are modeled scenarios, not guarantees. A percentage is shown only when the engine has an estimate; otherwise it explicitly says “Not quantified.”</div>
+ ${outcomes.map((o,i)=>{
+   const n=numeric[i]||0;
+   const width=n>0?Math.min(100,(n/max)*100):18;
+   return `<div class="outcome">
+     <div class="outcomeTop"><h3>${esc(o.title)}</h3><span class="likelihood">${esc(o.likelihood||"Not quantified")}</span></div>
+     <div class="bar"><i style="width:${width}%"></i></div>
+     <div class="small">${esc(o.explanation||"A plausible path to examine.")}</div>
+   </div>`;
+ }).join("")}
  <div class="grid">
-   <div class="tile"><h3>Key uncertainties</h3><ul>${(d.uncertainties||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
-   <div class="tile"><h3>What would change the answer?</h3><ul>${(d.whatWouldChangeIt||d.changes||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+   <div class="tile"><h3>Key uncertainties</h3><ul>${uncertainties.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+   <div class="tile"><h3>What would change the answer?</h3><ul>${changes.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
  </div>
- ${d.nextQuestions?.length?`<div class="tile" style="margin-top:14px"><h3>Useful next questions</h3><ul>${d.nextQuestions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+ ${Array.isArray(d.nextQuestions)&&d.nextQuestions.length?`<div class="tile" style="margin-top:14px"><h3>Useful next questions</h3><ul>${d.nextQuestions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
  `;
  $("result").classList.remove("hidden");
- latest={question:q,data:d,source};
+ latest={question:q,data:{...d,outcomes},source};
  $("download").disabled=false; $("copy").disabled=false;
  $("result").scrollIntoView({behavior:"smooth",block:"start"});
 }
-
 function reportText(){
  if(!latest)return "";
  const d=latest.data;
@@ -154,7 +201,13 @@ $("analyze").onclick=async()=>{
  const payload={question:q,mode,horizon:$("horizon").value,depth:$("depth").value,argumentFor:$("forArg").value,argumentAgainst:$("againstArg").value};
  try{
    const r=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-   if(r.ok){const data=await r.json();render(q,data,"AI-POWERED LOOKING GLASS ENGINE");$("status").textContent="AI answer generated.";return;}
+   if(r.ok){
+     const data=await r.json();
+     render(q,data,"AI-POWERED LOOKING GLASS ENGINE");
+     $("status").textContent="AI answer generated with modeled paths.";
+     $("analyze").disabled=false;
+     return;
+   }
  }catch(e){}
  const local=localEngine(q); render(q,local,"LOCAL LOOKING GLASS ENGINE"); $("status").textContent="AI endpoint unavailable — local reasoning engine used.";
  $("analyze").disabled=false;
