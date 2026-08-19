@@ -1,1 +1,166 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Probability Lab — probability calculations, simulations, distributions, and probabilistic forecasting."><title>Probability Lab</title><style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(135deg,#080d1c,#111a35);color:#f5f7ff}main{max-width:1040px;margin:auto;padding:34px 22px 60px}header{display:flex;justify-content:space-between;align-items:center}.brand{font-size:27px;font-weight:800}.pill{border:1px solid #34446f;border-radius:999px;padding:7px 12px;color:#b8c7ff}.hero{padding:76px 0 42px}.hero h1{font-size:clamp(42px,8vw,78px);line-height:.98;margin:0 0 22px;letter-spacing:-.04em}.hero p{font-size:20px;color:#b8c0d8;max-width:720px;line-height:1.6}.accent{color:#91afff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card{background:#111a30;border:1px solid #26345a;border-radius:18px;padding:22px;min-height:175px}.card h3{margin:0 0 10px}.card p{color:#b8c0d8;line-height:1.55}.cta{display:inline-block;margin-top:18px;background:#fff;color:#0b1020;text-decoration:none;font-weight:750;padding:13px 18px;border-radius:12px}.note{color:#8f9ab7;font-size:14px;margin-top:42px;line-height:1.5}</style></head><body><main><header><div class="brand">Probability Lab</div><div class="pill">Beta</div></header><section class="hero"><h1>Explore probability.<br><span class="accent">Model what could happen.</span></h1><p>Calculate probabilities, explore distributions, run Monte Carlo simulations, and build probabilistic forecasts from data and assumptions.</p><a class="cta" href="#tools">Explore the lab</a></section><section id="tools" class="grid"><article class="card"><h3>Probability Calculator</h3><p>Work with events, conditional probability, combinations, permutations, and expected outcomes.</p></article><article class="card"><h3>Distributions</h3><p>Explore common discrete and continuous probability distributions with visual outputs.</p></article><article class="card"><h3>Monte Carlo</h3><p>Simulate uncertain processes repeatedly to understand outcome ranges.</p></article><article class="card"><h3>Future Outcomes</h3><p>Build probabilistic forecasts from observations, assumptions, scenarios, and uncertainty.</p></article></section><p class="note">Probability Lab provides estimates, not guarantees. Forecast quality depends on data, assumptions, and model choice.</p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Looking Glass — a simple probability and debate modeling lab.">
+<title>Looking Glass</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#10172b;--line:#2a3961;--text:#f5f7ff;--muted:#aeb8d3;--blue:#8eacff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% 0%,#18244a 0,#070b18 42%);color:var(--text);min-height:100vh}
+main{max-width:1060px;margin:auto;padding:24px 18px 70px}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:24px;font-weight:850}.badge{border:1px solid #40527e;border-radius:999px;padding:6px 10px;color:#bdcaff;font-size:13px}
+.hero{padding:54px 0 30px}.hero h1{font-size:clamp(42px,8vw,76px);line-height:.98;letter-spacing:-.055em;margin:0 0 18px}.accent{color:var(--blue)}
+.hero p{max-width:760px;color:var(--muted);font-size:18px;line-height:1.6;margin:0}
+.lab{margin-top:22px;background:rgba(16,23,43,.88);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.tabs{display:flex;gap:8px;margin-bottom:20px}.tab{flex:1;border:1px solid var(--line);background:#0d1427;color:var(--muted);padding:13px;border-radius:12px;font-weight:750;cursor:pointer}.tab.active{background:#fff;color:#0a1020;border-color:#fff}
+.mode{display:none}.mode.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:8px}.field.full{grid-column:1/-1}label{font-weight:700;font-size:14px}
+input,textarea{width:100%;border:1px solid #334469;background:#0a1020;color:var(--text);border-radius:12px;padding:13px 14px;font:inherit;outline:none}textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(142,172,255,.12)}
+button.primary{width:100%;margin-top:16px;border:0;background:#fff;color:#091020;border-radius:12px;padding:14px;font-weight:850;font-size:16px;cursor:pointer}
+.result{margin-top:18px;padding:18px;border:1px solid var(--line);background:#0b1224;border-radius:16px;display:none}.result.show{display:block}
+.big{font-size:42px;font-weight:900;letter-spacing:-.04em}.meter{height:12px;background:#202b49;border-radius:99px;overflow:hidden;margin:12px 0}.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,#6f92ff,#8eacff);border-radius:99px;transition:width .35s}.small{color:var(--muted);line-height:1.55;font-size:14px}
+.debate-output{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.side{border:1px solid var(--line);border-radius:14px;padding:14px;background:#0e162b}.side h3{margin:0 0 7px}.side p{color:var(--muted);line-height:1.5;margin:0}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.card{background:#0f172d;border:1px solid #26355d;border-radius:16px;padding:18px}.card h3{margin:0 0 7px;font-size:16px}.card p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}.foot{margin-top:24px;color:#7f8bab;font-size:13px;line-height:1.5}
+@media(max-width:700px){main{padding:18px 14px 55px}.hero{padding-top:40px}.grid,.debate-output{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.lab{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<header class="top"><div class="brand">Looking Glass</div><div class="badge">Probability + Debate Lab</div></header>
+
+<section class="hero">
+<h1>Look at what <span class="accent">could happen.</span></h1>
+<p>Put a probability, question, or debate into the lab. Looking Glass turns simple assumptions into a clear model you can inspect and adjust.</p>
+</section>
+
+<section class="lab" id="lab">
+<div class="tabs">
+<button class="tab active" data-mode="probability">Probability</button>
+<button class="tab" data-mode="debate">Debate</button>
+</div>
+
+<div class="mode active" id="probability">
+<div class="grid">
+<div class="field full">
+<label for="event">What outcome are you estimating?</label>
+<input id="event" placeholder="e.g. It rains tomorrow">
+</div>
+<div class="field">
+<label for="favorable">Favorable outcomes</label>
+<input id="favorable" type="number" min="0" step="any" placeholder="e.g. 3">
+</div>
+<div class="field">
+<label for="total">Total possible outcomes</label>
+<input id="total" type="number" min="0" step="any" placeholder="e.g. 10">
+</div>
+</div>
+<button class="primary" id="calc">Calculate probability</button>
+
+<div class="result" id="probResult">
+<div class="small" id="probLabel">Estimated probability</div>
+<div class="big" id="probValue">—</div>
+<div class="meter"><span id="probMeter"></span></div>
+<div class="small" id="probText"></div>
+</div>
+</div>
+
+<div class="mode" id="debate">
+<div class="grid">
+<div class="field full">
+<label for="claim">What are you debating?</label>
+<textarea id="claim" placeholder="e.g. Should this project launch this month?"></textarea>
+</div>
+<div class="field">
+<label for="forSide">Argument for</label>
+<textarea id="forSide" placeholder="Enter the strongest case for it"></textarea>
+</div>
+<div class="field">
+<label for="againstSide">Argument against</label>
+<textarea id="againstSide" placeholder="Enter the strongest case against it"></textarea>
+</div>
+<div class="field">
+<label for="forWeight">Strength of the case for (1–10)</label>
+<input id="forWeight" type="number" min="1" max="10" value="5">
+</div>
+<div class="field">
+<label for="againstWeight">Strength of the case against (1–10)</label>
+<input id="againstWeight" type="number" min="1" max="10" value="5">
+</div>
+</div>
+<button class="primary" id="debateBtn">Model the debate</button>
+
+<div class="result" id="debateResult">
+<div class="small">Modeled balance of the arguments</div>
+<div class="big" id="debateValue">—</div>
+<div class="meter"><span id="debateMeter"></span></div>
+<div class="debate-output">
+<div class="side"><h3>For</h3><p id="forOut"></p></div>
+<div class="side"><h3>Against</h3><p id="againstOut"></p></div>
+</div>
+<p class="small" id="debateText"></p>
+</div>
+</div>
+</section>
+
+<section class="cards">
+<article class="card"><h3>Probability</h3><p>Test simple event probabilities and see the percentage immediately.</p></article>
+<article class="card"><h3>Debates</h3><p>Put competing arguments side by side and model their relative strength.</p></article>
+<article class="card"><h3>Adjust assumptions</h3><p>Change the inputs and run the model again instead of relying on a single answer.</p></article>
+<article class="card"><h3>Use as a lens</h3><p>Results are models, not guarantees. Better assumptions produce better estimates.</p></article>
+</section>
+
+<p class="foot">Looking Glass is an educational modeling tool. Its outputs are estimates based only on the numbers and arguments you enter.</p>
+</main>
+
+<script>
+const tabs=document.querySelectorAll('.tab');
+const modes=document.querySelectorAll('.mode');
+
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    modes.forEach(x=>x.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.mode).classList.add('active');
+  });
+});
+
+const $=id=>document.getElementById(id);
+
+$('calc').addEventListener('click',()=>{
+  const favorable=Number($('favorable').value);
+  const total=Number($('total').value);
+  const eventName=$('event').value.trim()||'This outcome';
+
+  if(!Number.isFinite(favorable)||!Number.isFinite(total)||total<=0||favorable<0||favorable>total){
+    alert('Enter valid numbers: favorable outcomes must be between 0 and the total.');
+    return;
+  }
+
+  const probability=(favorable/total)*100;
+  $('probLabel').textContent=eventName;
+  $('probValue').textContent=probability.toFixed(1)+'%';
+  $('probMeter').style.width=probability+'%';
+  $('probText').textContent=`Based on ${favorable} favorable outcome${favorable===1?'':'s'} out of ${total} total possible outcome${total===1?'':'s'}.`;
+  $('probResult').classList.add('show');
+});
+
+$('debateBtn').addEventListener('click',()=>{
+  const forWeight=Math.max(1,Math.min(10,Number($('forWeight').value)||1));
+  const againstWeight=Math.max(1,Math.min(10,Number($('againstWeight').value)||1));
+  const probability=(forWeight/(forWeight+againstWeight))*100;
+  const claim=$('claim').value.trim()||'This question';
+
+  $('debateValue').textContent=probability.toFixed(0)+'% for';
+  $('debateMeter').style.width=probability+'%';
+  $('forOut').textContent=$('forSide').value.trim()||'No argument entered.';
+  $('againstOut').textContent=$('againstSide').value.trim()||'No argument entered.';
+  $('debateText').textContent=`For “${claim}”, the model gives the side-for a ${probability.toFixed(0)}% share based only on the strength scores you entered.`;
+  $('debateResult').classList.add('show');
+});
+</script>
+</body>
+</html>
