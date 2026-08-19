@@ -3,219 +3,268 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b18">
-<meta name="description" content="Looking Glass — plain-language scenario forecasting and probability modeling.">
-<title>Looking Glass</title>
+<title>Looking Glass — Model What Could Happen</title>
+<meta name="theme-color" content="#080d1d">
 <style>
-:root{color-scheme:dark;--bg:#070b18;--panel:#0e162b;--line:#2b3b67;--text:#f5f7ff;--muted:#aeb8d3;--blue:#8eacff;--green:#72e1b2;--amber:#f3c76b}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#1a2853,#070b18 45%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1080px;margin:auto;padding:20px 15px 70px}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.brand{font-size:24px;font-weight:900}.badge{border:1px solid #40527e;border-radius:999px;padding:6px 10px;color:#bdcaff;font-size:12px}
-.hero{padding:50px 0 26px}.hero h1{font-size:clamp(43px,8vw,78px);line-height:.95;letter-spacing:-.06em;margin:0 0 18px}.accent{color:var(--blue)}
-.hero p{max-width:820px;color:var(--muted);font-size:18px;line-height:1.6;margin:0}
-.lab{background:rgba(14,22,43,.92);border:1px solid var(--line);border-radius:24px;padding:17px;box-shadow:0 25px 90px #0005}
-.tabs{display:flex;gap:8px;margin-bottom:18px}.tab{flex:1;border:1px solid var(--line);background:#0b1224;color:var(--muted);padding:13px;border-radius:12px;font-weight:800}.tab.active{background:#fff;color:#091020}
-.mode{display:none}.mode.active{display:block}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:14px;font-weight:800}.field small{color:#7f8bab}
-input,textarea{width:100%;border:1px solid #334469;background:#090f20;color:var(--text);border-radius:13px;padding:13px 14px;outline:none;font:inherit}
-textarea{min-height:105px;resize:vertical}.prompt{min-height:170px;font-size:18px;line-height:1.45}
-input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #8eacff1f}
-.primary{width:100%;margin-top:14px;border:0;background:#fff;color:#091020;border-radius:13px;padding:15px;font-weight:900;font-size:16px}
-.secondary{border:1px solid #3b4f82;background:#0b1224;color:var(--text);border-radius:11px;padding:10px 13px;font-weight:750}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
-.result{display:none;margin-top:18px;padding:18px;border:1px solid var(--line);background:#0a1122;border-radius:18px}.result.show{display:block}
-.eyebrow{color:#8ea3d2;font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}.result h2{margin:4px 0 6px;font-size:25px}
-.lead{color:var(--muted);line-height:1.6;margin:7px 0}.confidence{display:inline-flex;gap:7px;align-items:center;border:1px solid #334469;border-radius:999px;padding:6px 9px;color:#c7d1e8;font-size:12px;margin-top:9px}.dot{width:8px;height:8px;border-radius:50%;background:var(--amber)}
-.section{margin-top:20px}.section h3{margin:0 0 10px;font-size:15px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mini{border:1px solid #26375f;background:#0d162c;border-radius:14px;padding:14px}.mini strong{display:block;margin-bottom:5px}.mini p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
-.paths{display:grid;gap:9px}.path{border:1px solid #26375f;background:#0d162c;border-radius:14px;padding:13px}.path-top{display:flex;justify-content:space-between;gap:10px}.path-name{font-weight:900}.pct{color:var(--blue);font-weight:900}
-.bar{height:9px;background:#1b2745;border-radius:99px;overflow:hidden;margin:9px 0 7px}.bar span{display:block;height:100%;background:linear-gradient(90deg,#668dff,#8eacff);border-radius:99px;transition:width .25s}
-.path p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid #334469;background:#0d162c;border-radius:999px;padding:7px 9px;color:#c9d3eb;font-size:12px}
-.assumptions{display:grid}.assumption{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #1d2946;padding:9px 0}.assumption:last-child{border-bottom:0}.num{flex:0 0 24px;height:24px;border-radius:50%;background:#1a2a50;color:#a9c0ff;display:grid;place-items:center;font-size:12px;font-weight:900}.assumption p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
-.adjust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.slider{border:1px solid #26375f;background:#0d162c;border-radius:14px;padding:13px}.slider label{display:flex;justify-content:space-between;font-size:13px;font-weight:800}.slider input{padding:0;border:0;box-shadow:none}
-.notice{margin-top:18px;border-left:3px solid var(--amber);background:#17182a;padding:12px 13px;border-radius:8px;color:#c4cbe0;font-size:13px;line-height:1.5}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:16px}.card{background:#0f172d;border:1px solid #26355d;border-radius:16px;padding:16px}.card h3{margin:0 0 6px;font-size:15px}.card p{margin:0;color:var(--muted);line-height:1.45;font-size:13px}.foot{margin-top:22px;color:#7f8bab;font-size:12px;line-height:1.5}.error{color:#ffadb6}
-@media(max-width:760px){.grid,.adjust,.cards{grid-template-columns:1fr 1fr}}@media(max-width:520px){main{padding:16px 13px 55px}.hero{padding-top:40px}.hero h1{font-size:52px}.hero p{font-size:16px}.grid,.adjust,.cards{grid-template-columns:1fr}.top{align-items:flex-start}.badge{font-size:11px}}
+:root{
+  --bg:#070b18; --panel:#0d1428; --panel2:#111a31; --line:#26375f;
+  --text:#f5f7ff; --muted:#aeb9d6; --blue:#78a7ff; --blue2:#3d73ff;
+  --green:#54d6a1; --yellow:#ffd166; --red:#ff7d8b;
+  --shadow:0 20px 60px rgba(0,0,0,.35); --radius:20px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:
+ radial-gradient(1000px 500px at 50% -100px,rgba(61,115,255,.18),transparent 60%),
+ linear-gradient(180deg,#070b18 0%,#091021 100%);
+ color:var(--text);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+ min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(980px,100%);margin:auto;padding:22px 16px 70px}
+header{padding:18px 4px 12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border:1px solid #38518b;border-radius:13px;display:grid;place-items:center;background:#101a35;box-shadow:0 0 30px rgba(61,115,255,.16)}
+.logo:before{content:"◉";font-size:22px;color:#8db4ff}
+h1{font-size:28px;margin:0;letter-spacing:-.5px}
+.sub{color:var(--muted);margin:3px 0 0}
+.hero{padding:30px 22px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(20,31,60,.94),rgba(8,14,30,.96));box-shadow:var(--shadow)}
+.hero h2{font-size:clamp(34px,7vw,64px);line-height:1.02;margin:0 0 12px;letter-spacing:-2px}
+.hero h2 span{color:#82aaff}
+.hero p{color:var(--muted);max-width:760px;font-size:17px}
+.card{margin-top:16px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(13,20,40,.88)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.tab{border:1px solid #304575;background:#0b1225;color:#b9c5e4;border-radius:14px;padding:13px;font-weight:700}
+.tab.active{background:#f7f8ff;color:#0a1020;border-color:#f7f8ff}
+label{display:block;font-weight:700;margin:14px 0 7px}
+textarea,input,select{width:100%;background:#080f20;color:var(--text);border:1px solid #304575;border-radius:14px;padding:14px;outline:none}
+textarea{min-height:150px;resize:vertical}
+textarea:focus,input:focus,select:focus{border-color:#6e9fff;box-shadow:0 0 0 3px rgba(110,159,255,.12)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{border:0;border-radius:14px;padding:13px 17px;font-weight:800}
+.primary{background:#f6f7fb;color:#091021}
+.secondary{background:#172442;color:#dbe4ff;border:1px solid #314775}
+.green{background:#1b5f4a;color:#eafff7;border:1px solid #3da77e}
+.status{margin-top:10px;color:var(--muted);font-size:13px;min-height:20px}
+.hidden{display:none!important}
+.result h2{font-size:34px;line-height:1.1;margin:0 0 8px}
+.kicker{text-transform:uppercase;letter-spacing:2px;color:#90adf0;font-weight:900;font-size:12px}
+.note{padding:12px 14px;border:1px solid #35466f;border-radius:13px;color:#cbd5ef;background:#0b1429}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{padding:16px;border:1px solid #2a3c66;border-radius:16px;background:#0b1428}
+.tile h3{margin:0 0 6px;font-size:17px}
+.tile p{margin:0;color:#b8c3df}
+.path{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #25365c}
+.path:last-child{border-bottom:0}
+.pill{padding:5px 9px;border-radius:999px;background:#152447;color:#b9d0ff;font-size:12px;font-weight:800;white-space:nowrap}
+meter{width:100%;height:12px}
+.small{font-size:13px;color:var(--muted)}
+footer{margin-top:22px;color:#7886a8;font-size:12px;text-align:center}
+@media(max-width:680px){.row,.grid{grid-template-columns:1fr}.hero{padding:24px 17px}.wrap{padding-left:12px;padding-right:12px}.hero h2{font-size:42px}}
 </style>
 </head>
 <body>
-<main>
-<header class="top"><div class="brand">Looking Glass</div><div class="badge">Scenario + Probability Lab</div></header>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo"></div><div><h1>Looking Glass</h1><div class="sub">Model what could happen.</div></div></div>
+</header>
 
 <section class="hero">
-<h1>Ask what could happen. <span class="accent">See the paths.</span></h1>
-<p>Give Looking Glass a question in plain English. It turns the question into a structured scenario, identifies uncertainties, builds plausible paths, and lets you change assumptions.</p>
+  <div class="kicker">Scenario intelligence</div>
+  <h2>Ask one question.<br><span>See the paths.</span></h2>
+  <p>Looking Glass turns an uncertain question into a structured scenario: likely effects, responses, uncertainties, alternative paths, assumptions and confidence ranges. It does not claim to know the future.</p>
 </section>
 
-<section class="lab">
-<div class="tabs">
-<button class="tab active" data-mode="forecast">Forecast</button>
-<button class="tab" data-mode="debate">Debate</button>
-<button class="tab" data-mode="math">Probability</button>
-</div>
+<section class="card">
+  <div class="tabs">
+    <button class="tab active" data-mode="scenario">Looking Glass</button>
+    <button class="tab" data-mode="probability">Probability</button>
+    <button class="tab" data-mode="debate">Debate</button>
+  </div>
 
-<div class="mode active" id="forecast">
-<div class="field">
-<label for="question">What do you want to model?</label>
-<textarea id="question" class="prompt" placeholder="Try: What could happen if America bombs Iran?
+  <label for="question">What do you want to know?</label>
+  <textarea id="question" placeholder="Example: What happens if interest rates stay high for another year?"></textarea>
 
-Or: Will my business reach 1,000 customers this year?
-Or: What are the likely outcomes if I launch next month?"></textarea>
-<small>One human question is enough. You do not need to know probability formulas first.</small>
-</div>
-<button class="primary" id="modelBtn">Model what could happen</button>
-<div class="result" id="forecastResult"></div>
-</div>
+  <div id="debateFields" class="hidden">
+    <div class="row">
+      <div><label for="forArg">Argument for</label><textarea id="forArg" placeholder="The strongest case for the proposition"></textarea></div>
+      <div><label for="againstArg">Argument against</label><textarea id="againstArg" placeholder="The strongest case against the proposition"></textarea></div>
+    </div>
+    <div class="row">
+      <div><label for="forStrength">Strength for (1–10)</label><input id="forStrength" type="number" min="1" max="10" value="5"></div>
+      <div><label for="againstStrength">Strength against (1–10)</label><input id="againstStrength" type="number" min="1" max="10" value="5"></div>
+    </div>
+  </div>
 
-<div class="mode" id="debate">
-<div class="field"><label for="debateQuestion">What are you trying to decide?</label><textarea id="debateQuestion" class="prompt" placeholder="Should I launch this product now or wait?"></textarea></div>
-<div class="grid" style="margin-top:12px">
-<div class="field"><label for="forArg">Best case for it</label><textarea id="forArg" placeholder="Why might it work?"></textarea></div>
-<div class="field"><label for="againstArg">Best case against it</label><textarea id="againstArg" placeholder="What could go wrong?"></textarea></div>
-<div class="field"><label for="forScore">Strength for (1–10)</label><input id="forScore" type="number" min="1" max="10" value="5"></div>
-<div class="field"><label for="againstScore">Strength against (1–10)</label><input id="againstScore" type="number" min="1" max="10" value="5"></div>
-</div>
-<button class="primary" id="debateBtn">Model the debate</button><div class="result" id="debateResult"></div>
-</div>
+  <div class="row">
+    <div><label for="horizon">Time horizon</label>
+      <select id="horizon"><option>Days to weeks</option><option selected>Months</option><option>1–3 years</option><option>5+ years</option></select>
+    </div>
+    <div><label for="detail">Analysis depth</label>
+      <select id="detail"><option>Quick</option><option selected>Deep</option><option>Maximum</option></select>
+    </div>
+  </div>
 
-<div class="mode" id="math">
-<div class="field"><label for="event">What outcome are you estimating?</label><input id="event" placeholder="e.g. It rains tomorrow"></div>
-<div class="grid" style="margin-top:12px">
-<div class="field"><label for="favorable">Favorable outcomes</label><input id="favorable" type="number" min="0" step="any" placeholder="3"></div>
-<div class="field"><label for="total">Total possible outcomes</label><input id="total" type="number" min="1" step="any" placeholder="10"></div>
-</div>
-<button class="primary" id="calcBtn">Calculate probability</button><div class="result" id="mathResult"></div>
-</div>
+  <div class="actions">
+    <button class="btn primary" id="analyze">Model the scenario</button>
+    <button class="btn secondary" id="download" disabled>Download report</button>
+    <button class="btn secondary" id="copy" disabled>Copy report</button>
+  </div>
+  <div id="status" class="status"></div>
 </section>
 
-<section class="cards">
-<article class="card"><h3>Plain language</h3><p>Start with a human question instead of a form full of numbers.</p></article>
-<article class="card"><h3>Scenario tree</h3><p>See immediate outcomes, uncertainties, and several plausible paths.</p></article>
-<article class="card"><h3>Assumption lab</h3><p>Move assumptions and watch the modeled paths change.</p></article>
-<article class="card"><h3>No fake certainty</h3><p>Results are estimates, not claims that the future is known.</p></article>
+<section id="result" class="card result hidden"></section>
+
+<section class="card">
+  <div class="kicker">Optional AI connection</div>
+  <h3>Use a real model when you have an AI endpoint</h3>
+  <p class="small">This standalone build works without an API key. If you connect your own server endpoint, it can return model-generated analysis without putting a secret key in the browser.</p>
+  <label for="endpoint">AI endpoint (optional)</label>
+  <input id="endpoint" placeholder="https://your-domain.com/api/looking-glass">
+  <div class="actions"><button class="btn secondary" id="saveEndpoint">Save endpoint on this device</button></div>
+  <div class="small">Your endpoint should accept JSON <code>{question, mode, horizon}</code> and return JSON with an <code>answer</code> field. Never put a private provider API key directly in this HTML file.</div>
 </section>
 
-<p class="foot">Looking Glass is a modeling aid. It does not know the future. Its estimates come from the question and explicit modeling assumptions. For real-world decisions, verify important facts with current sources.</p>
-</main>
+<footer>Looking Glass • estimates are estimates • assumptions are not facts • uncertainty is explicit</footer>
+</div>
 
 <script>
-const $=id=>document.getElementById(id);
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".mode").forEach(x=>x.classList.remove("active"));
-  t.classList.add("active");$(t.dataset.mode).classList.add("active");
+const $ = id => document.getElementById(id);
+let mode = "scenario";
+let latest = null;
+
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  mode = b.dataset.mode;
+  $("debateFields").classList.toggle("hidden", mode !== "debate");
+  $("question").placeholder = mode === "probability"
+    ? "Example: What is the probability that a project misses its deadline?"
+    : mode === "debate"
+    ? "Example: Should a city adopt congestion pricing?"
+    : "Example: What happens if interest rates stay high for another year?";
 }));
-function clean(s){return s.trim().replace(/\s+/g," ")}
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-function typeOf(q){
-  const s=q.toLowerCase();
-  if(/war|bomb|invad|attack|strike|military|iran|russia|ukraine|china|election|government|president|sanction|conflict|ceasefire/.test(s))return"geopolitical";
-  if(/business|company|startup|customer|sales|revenue|launch|product|market|stock|price|profit/.test(s))return"business";
-  if(/job|career|hire|promotion|work/.test(s))return"career";
-  if(/weather|rain|snow|storm|hurricane/.test(s))return"weather";
-  return"general";
-}
-function targetOf(q){
-  return clean(q)
-    .replace(/^what (will|would|could) happen if /i,"")
-    .replace(/^what happens if /i,"")
-    .replace(/^will /i,"")
-    .replace(/^should /i,"")
-    .replace(/[?!.]+$/,"") || "the stated scenario";
-}
-function makeModel(q){
-  const type=typeOf(q),target=targetOf(q);
-  const common={target,uncertainties:[],paths:[],assumptions:[]};
-  if(type==="geopolitical"){
-    common.scenario="A major geopolitical or military event occurs, followed by reactions, counter-reactions, and attempts to contain or expand the situation.";
-    common.immediate=["Retaliation or counteraction","Diplomatic and political response","Market and public reaction","Pressure for de-escalation or escalation"];
-    common.uncertainties=["Scope and objectives of the initiating action","Response chosen by the other side","Third-party involvement","Domestic and international constraints"];
-    common.paths=[["De-escalation / containment",40,"The event remains limited and actors create channels to contain escalation."],["Limited conflict / prolonged tension",40,"Actions continue for a period but remain bounded by constraints and incentives."],["Wider regional conflict",20,"Additional actors or repeated retaliation expand the conflict."]];
-    common.assumptions=["The wording describes a scenario, not a confirmed event.","Escalation is path-dependent: each reaction changes the next decision.","The percentages are starting weights, not measured probabilities."];
-  }else if(type==="business"){
-    common.scenario="A business decision or market event creates feedback from customers, competitors, resources, and execution.";
-    common.immediate=["Customer response","Competitor response","Cash-flow or resource effects","Operational feedback"];
-    common.uncertainties=["Demand strength","Execution quality","Timing","Competitive response"];
-    common.paths=[["Strong adoption",35,"Demand and execution reinforce each other."],["Mixed / gradual outcome",45,"The idea works unevenly and requires iteration."],["Weak adoption / pivot",20,"Demand or execution falls short and the plan changes."]];
-    common.assumptions=["No market history was supplied, so the weights are deliberately broad.","Real forecasting should replace starting weights with evidence."];
-  }else if(type==="career"){
-    common.scenario="A career decision creates feedback from performance, timing, competition, and organizational constraints.";
-    common.immediate=["Decision-maker response","Performance or opportunity signal","New options","Possible delay or rejection"];
-    common.uncertainties=["Competition","Timing","Quality of execution","Organizational priorities"];
-    common.paths=[["Favorable outcome",35,"The decision aligns with timing and performance."],["Delayed / partial outcome",45,"Progress occurs but more evidence or time is needed."],["Unfavorable outcome",20,"Constraints dominate and the current path does not work."]];
-    common.assumptions=["The model has no private information about the organization.","These are scenario weights, not guarantees."];
-  }else if(type==="weather"){
-    common.scenario="A weather condition develops with several possible intensity and timing paths.";
-    common.immediate=["Forecast confidence changes","Local conditions diverge","Plans may need adjustment"];
-    common.uncertainties=["Track and timing","Intensity","Local effects","Forecast updates"];
-    common.paths=[["Lower impact",45,"Conditions stay weaker or shift away."],["Expected / moderate impact",40,"The event develops near the central scenario."],["Higher impact",15,"Intensity or local exposure is greater than expected."]];
-    common.assumptions=["Weather requires current forecast data for a real decision.","These weights are illustrative until current observations are supplied."];
-  }else{
-    common.scenario="The situation develops through decisions, reactions, new information, and feedback rather than a single guaranteed outcome.";
-    common.immediate=["First-order effects","Responses by other people or systems","New information arrives","Initial assumptions may change"];
-    common.uncertainties=["Timing","Strength of reactions","External events","Quality of the initial assumptions"];
-    common.paths=[["Favorable / stabilizing",35,"The strongest assumptions hold and feedback remains manageable."],["Mixed / base path",45,"Some assumptions hold while others change."],["Adverse / disruptive",20,"Several assumptions break at once and the situation worsens."]];
-    common.assumptions=["The question alone cannot establish empirical probabilities.","Weights are starting points for exploration, not facts.","Adding evidence should change the model."];
+
+$("endpoint").value = localStorage.getItem("lg_endpoint") || "";
+$("saveEndpoint").onclick = () => {
+  localStorage.setItem("lg_endpoint", $("endpoint").value.trim());
+  $("status").textContent = $("endpoint").value.trim() ? "AI endpoint saved on this device." : "AI endpoint cleared.";
+};
+
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function pick(arr,n){return arr[n%arr.length]}
+function pct(n){return Math.round(n)+"%"}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+function localModel(q){
+  const text=q.toLowerCase(), h=hash(q);
+  const conflict=/war|bomb|attack|invad|strike|missile|iran|russia|china|military|nuclear/.test(text);
+  const finance=/rate|inflation|stock|market|economy|recession|mortgage|price|money|business|tax/.test(text);
+  const tech=/ai|software|app|technology|computer|chip|internet|robot|model/.test(text);
+  const health=/health|disease|drug|medical|hospital|virus/.test(text);
+  let topic=conflict?"geopolitical/security":finance?"economic/financial":tech?"technology/product":health?"health/science":"general";
+  let effects, responses, uncertainties, paths;
+  if(conflict){
+    effects=["Immediate reactions by the directly affected parties","Market, diplomatic and public responses","Pressure for escalation, restraint or negotiation"];
+    responses=["Governments and institutions reassess their next move","Allies, partners and international organizations respond","New intelligence and political signals change the decision tree"];
+    uncertainties=["Scale and objectives of the action","How other actors interpret the action","Domestic political constraints","New information arriving after the initial event"];
+    paths=[["De-escalation / containment",30+h%26],["Limited conflict",35+(h>>3)%21],["Wider escalation",15+(h>>7)%18]];
+  } else if(finance){
+    effects=["Borrowing and spending behavior changes","Asset prices and business decisions adjust","Households and firms revise expectations"];
+    responses=["Central banks, governments or companies react","Consumers and investors change behavior","New economic data updates expectations"];
+    uncertainties=["Policy response","Inflation and growth data","Labor-market conditions","External shocks"];
+    paths=[["Soft adjustment",35+h%20],["Persistent pressure",35+(h>>3)%20],["Sharp downturn / shock",12+(h>>7)%18]];
+  } else if(tech){
+    effects=["Users and organizations change workflows","Competitors and complementary products respond","Costs, reliability and adoption become more important"];
+    responses=["Developers iterate based on feedback","Users shift toward the most useful capabilities","New tooling or regulation changes the environment"];
+    uncertainties=["Actual adoption rate","Technical reliability at scale","Cost and compute availability","Competitive response"];
+    paths=[["Fast adoption",30+h%28],["Gradual adoption",38+(h>>3)%22],["Slow / uneven adoption",15+(h>>7)%18]];
+  } else {
+    effects=["The first-order consequences appear","People and systems react to the change","New information changes later decisions"];
+    responses=["Stakeholders adapt to incentives and constraints","Institutions respond to the strongest signals","Feedback changes the next stage"];
+    uncertainties=["Behavioral response","Timing","Unexpected external events","Quality of available information"];
+    paths=[["Favorable outcome",30+h%25],["Mixed outcome",40+(h>>3)%18],["Adverse outcome",15+(h>>7)%18]];
   }
-  return common;
+  const total=paths.reduce((a,x)=>a+x[1],0);
+  paths=paths.map(x=>[x[0],Math.round(x[1]/total*100)]);
+  const confidence=topic==="general"?"low to moderate":(h%3===0?"moderate":"low to moderate");
+  const summary = mode==="probability"
+    ? "The question can be treated as a probability model, but the number should be interpreted as an estimate based on explicit assumptions—not a measured fact."
+    : mode==="debate"
+    ? "The strongest useful answer is a balanced decision model: compare the arguments, expose assumptions, then test how the conclusion changes when those assumptions move."
+    : "The question is best treated as a branching scenario rather than a single forecast. The outcome depends on decisions, reactions and new information.";
+  return {topic,confidence,effects,responses,uncertainties,paths,summary};
 }
-function render(m){
-  const immediate=m.immediate.map(x=>`<div class="mini"><strong>${esc(x)}</strong><p>A plausible first-order effect to examine.</p></div>`).join("");
-  const chips=m.uncertainties.map(x=>`<span class="chip">${esc(x)}</span>`).join("");
-  const paths=m.paths.map((p,i)=>`<div class="path"><div class="path-top"><div class="path-name">${i+1}. ${esc(p[0])}</div><div class="pct"><span id="pct${i}">${p[1]}</span>%</div></div><div class="bar"><span id="bar${i}" style="width:${p[1]}%"></span></div><p>${esc(p[2])}</p></div>`).join("");
-  const assumptions=m.assumptions.map((x,i)=>`<div class="assumption"><div class="num">${i+1}</div><p>${esc(x)}</p></div>`).join("");
-  return `<div class="eyebrow">Modeled scenario</div>
-<h2>${esc(m.target)}</h2><p class="lead">${esc(m.scenario)}</p>
-<div class="confidence"><span class="dot"></span>Starting estimate — low to moderate confidence</div>
-<div class="section"><h3>Immediate outcomes to watch</h3><div class="grid">${immediate}</div></div>
-<div class="section"><h3>Key uncertainties</h3><div class="chips">${chips}</div></div>
-<div class="section"><h3>Plausible paths</h3><div class="paths">${paths}</div></div>
-<div class="section"><h3>Why these estimates?</h3><div class="assumptions">${assumptions}</div></div>
-<div class="section"><h3>Change the assumptions</h3>
-<div class="adjust">
-<div class="slider"><label>Containment <output id="containOut">50</output></label><input id="contain" type="range" min="0" max="100" value="50"></div>
-<div class="slider"><label>External involvement <output id="externalOut">50</output></label><input id="external" type="range" min="0" max="100" value="50"></div>
-<div class="slider"><label>Shock intensity <output id="shockOut">50</output></label><input id="shock" type="range" min="0" max="100" value="50"></div>
-</div>
-<div class="actions"><button class="secondary" id="recalc">Recalculate paths</button><button class="secondary" id="reset">Reset assumptions</button></div>
-</div>
-<div class="notice">These percentages are model outputs, not discovered facts. If this concerns a real-world event, add current evidence before treating any path as decision-grade.</div>`;
+
+async function getAnalysis(q){
+  const endpoint=localStorage.getItem("lg_endpoint");
+  if(endpoint){
+    try{
+      const r=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+        question:q,mode,horizon:$("horizon").value,detail:$("detail").value,
+        argumentFor:$("forArg").value,argumentAgainst:$("againstArg").value
+      })});
+      if(r.ok){
+        const data=await r.json();
+        if(data && data.answer) return {remote:true,answer:String(data.answer),local:localModel(q)};
+      }
+    }catch(e){ console.warn("AI endpoint unavailable",e); }
+  }
+  return {remote:false,local:localModel(q)};
 }
-function recalc(){
-  const c=+$("contain").value,e=+$("external").value,s=+$("shock").value;
-  let stable=40+Math.round(c*.25)-Math.round(e*.10)-Math.round(s*.08);
-  let limited=40-Math.round(c*.08)+Math.round(e*.10)+Math.round(s*.02);
-  stable=Math.max(5,Math.min(85,stable));limited=Math.max(5,Math.min(85,limited));
-  let wide=100-stable-limited;
-  if(wide<5){wide=5;limited=Math.max(5,100-stable-wide)}
-  [stable,limited,wide].forEach((v,i)=>{$("pct"+i).textContent=v;$("bar"+i).style.width=v+"%"});
+
+function render(q,a){
+  const l=a.local;
+  let html=`<div class="kicker">${a.remote?"AI-ASSISTED ANALYSIS":"LOOKING GLASS LOCAL ENGINE"}</div>
+  <h2>${esc(q)}</h2>
+  <p>${esc(l.summary)}</p>
+  <div class="note"><b>Confidence:</b> ${esc(l.confidence)} • <b>Horizon:</b> ${esc($("horizon").value)} • <b>Topic:</b> ${esc(l.topic)}</div>`;
+  if(a.remote) html+=`<div class="tile" style="margin-top:12px"><h3>Model response</h3><p>${esc(a.answer).replace(/\\n/g,"<br>")}</p></div>`;
+  html+=`<h3 style="margin-top:22px">Immediate outcomes to watch</h3><div class="grid">`;
+  l.effects.forEach((x,i)=>html+=`<div class="tile"><h3>${["First-order effects","Responses by other people or systems","New information arrives"][i]}</h3><p>${esc(x)}</p></div>`);
+  html+=`</div><h3 style="margin-top:22px">Possible paths</h3>`;
+  l.paths.forEach(x=>html+=`<div class="path"><span>${esc(x[0])}</span><span class="pill">${pct(x[1])} starting estimate</span></div>`);
+  html+=`<h3 style="margin-top:22px">Key uncertainties</h3><div class="grid">`;
+  l.uncertainties.forEach(x=>html+=`<div class="tile"><p>${esc(x)}</p></div>`);
+  html+=`</div><h3 style="margin-top:22px">Assumptions</h3>
+  <div class="note">These are model assumptions, not established facts. Change the wording, horizon or inputs and the forecast should be reconsidered. Looking Glass should never present uncertainty as certainty.</div>`;
+  if(mode==="debate"){
+    const f=clamp(Number($("forStrength").value)||5,1,10), ag=clamp(Number($("againstStrength").value)||5,1,10);
+    const fp=Math.round(f/(f+ag)*100);
+    html+=`<h3 style="margin-top:22px">Debate balance</h3><div class="path"><span>Case for</span><span class="pill">${fp}% weight</span></div><div class="path"><span>Case against</span><span class="pill">${100-fp}% weight</span></div>`;
+  }
+  $("result").innerHTML=html;
+  $("result").classList.remove("hidden");
 }
-$("modelBtn").addEventListener("click",()=>{
-  const q=clean($("question").value);
-  if(!q){$("forecastResult").innerHTML='<div class="error">Tell me what you want to model first.</div>';$("forecastResult").classList.add("show");return}
-  $("forecastResult").innerHTML=render(makeModel(q));$("forecastResult").classList.add("show");
-  ["contain","external","shock"].forEach(id=>$(id).addEventListener("input",()=>$(id+"Out").textContent=$(id).value));
-  $("recalc").onclick=recalc;
-  $("reset").onclick=()=>{["contain","external","shock"].forEach(id=>{$(id).value=50;$(id+"Out").textContent=50});recalc()};
-  $("forecastResult").scrollIntoView({behavior:"smooth",block:"start"});
-});
-$("debateBtn").addEventListener("click",()=>{
-  const a=Math.max(1,Math.min(10,+$("forScore").value||1)),b=Math.max(1,Math.min(10,+$("againstScore").value||1)),p=Math.round(a/(a+b)*100);
-  const q=clean($("debateQuestion").value)||"This decision";
-  $("debateResult").innerHTML=`<div class="eyebrow">Modeled debate</div><h2>${esc(q)}</h2>
-<p class="lead">The side-for receives a ${p}% model share from the strength scores. That is a weighting tool, not a claim that the conclusion is objectively ${p}% likely.</p>
-<div class="grid"><div class="mini"><strong>For — ${a}/10</strong><p>${esc(clean($("forArg").value)||"No argument entered.")}</p></div>
-<div class="mini"><strong>Against — ${b}/10</strong><p>${esc(clean($("againstArg").value)||"No argument entered.")}</p></div></div>
-<div class="section"><div class="bar"><span style="width:${p}%"></span></div></div>
-<div class="notice">Improve the model by adding evidence, counterarguments, and concrete assumptions. Looking Glass is a thinking tool, not a machine that claims to know the future.</div>`;
-  $("debateResult").classList.add("show");
-});
-$("calcBtn").addEventListener("click",()=>{
-  const a=+$("favorable").value,b=+$("total").value,name=clean($("event").value)||"This outcome";
-  if(!Number.isFinite(a)||!Number.isFinite(b)||b<=0||a<0||a>b){$("mathResult").innerHTML='<div class="error">Enter valid numbers: favorable outcomes must be between 0 and the total.</div>';$("mathResult").classList.add("show");return}
-  const p=a/b*100;
-  $("mathResult").innerHTML=`<div class="eyebrow">Probability</div><h2>${p.toFixed(1)}%</h2><p class="lead">${esc(name)} has ${a} favorable outcome${a===1?"":"s"} out of ${b} total possible outcomes in this model.</p><div class="section"><div class="bar"><span style="width:${p}%"></span></div></div>`;
-  $("mathResult").classList.add("show");
-});
+
+function reportText(q,a){
+  const l=a.local;
+  return `LOOKING GLASS REPORT\\n\\nQuestion: ${q}\\nMode: ${mode}\\nTime horizon: ${$("horizon").value}\\nTopic: ${l.topic}\\nConfidence: ${l.confidence}\\n\\nSUMMARY\\n${l.summary}\\n\\nIMMEDIATE OUTCOMES\\n- ${l.effects.join("\\n- ")}\\n\\nPOSSIBLE PATHS\\n${l.paths.map(x=>"- "+x[0]+": "+x[1]+"% starting estimate").join("\\n")}\\n\\nKEY UNCERTAINTIES\\n- ${l.uncertainties.join("\\n- ")}\\n\\nNOTE\\nThese are estimates and assumptions, not established facts. Looking Glass does not claim to know the future.`;
+}
+function downloadReport(){
+  if(!latest)return;
+  const q=$("question").value.trim();
+  const text=reportText(q,latest);
+  const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url;a.download="looking-glass-report.txt";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$("download").onclick=downloadReport;
+$("copy").onclick=async()=>{if(latest){await navigator.clipboard.writeText(reportText($("question").value.trim(),latest));$("status").textContent="Report copied."}};
+
+$("analyze").onclick=async()=>{
+  const q=$("question").value.trim();
+  if(!q){$("status").textContent="Enter a question first.";return}
+  $("analyze").disabled=true;$("download").disabled=true;$("copy").disabled=true;
+  $("status").textContent="Modeling the question…";
+  latest=await getAnalysis(q);
+  render(q,latest);
+  $("status").textContent=latest.remote?"AI endpoint responded. Report is ready.":"Local analysis complete. Add your own AI endpoint for model-generated responses.";
+  $("analyze").disabled=false;$("download").disabled=false;$("copy").disabled=false;
+};
 </script>
 </body>
 </html>
